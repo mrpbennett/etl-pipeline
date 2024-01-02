@@ -61,7 +61,6 @@ def add_user_to_redis(user_data: list, user_address_data: list) -> None:
                 "street_name": uad.get("street_name", "n/a"),
                 "street_address": uad.get("street_address", "n/a"),
                 "zip_code": uad.get("zip_code", "n/a"),
-                "email": uad.get("email", "n/a"),
                 "state": uad.get("state", "n/a"),
                 "country": uad.get("country", "n/a"),
             }
@@ -95,7 +94,7 @@ def get_user_from_redis(key: str) -> dict:
         if redis.exists(key):
             data: dict = redis.hgetall(key)
         else:
-            logging.error(f"Key '{red(key)}' not found in Redis.")
+            logging.error(f"Key {red(key)} not found in Redis. Trying Postgres...")
 
         return data
 
