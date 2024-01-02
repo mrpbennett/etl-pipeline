@@ -1,10 +1,47 @@
-""" Data Storage """
+""" Storing data inside Postgres
+
+Here we storage our user and user address data inside Postgres. There are two tables
+one that stores user data with the users uid and another address table that stores the 
+users address with the users uid. Allow the creation of relationships between the two
+tables
+
+Typical usage example:
+
+        user_data = {}
+        users_addresss_data = {}
+
+    if check_table_exists("users") and check_table_exists("users_address"):
+            for user in user_data:
+                if insert_into_user_table(user):
+                    logging.info(green(f"User: {user['uid']} added successfully"))
+
+            for address in users_addresss_data:
+                if insert_into_address_table(address):
+                    logging.info(
+                        green(f"Address for User: {address['uid']} added successfully")
+                    )
+        else:
+            # IF tables do not exist create and add data
+            if create_user_table():
+                logging.info(blue("user table created"))
+            if create_address_table():
+                logging.info(blue("users_address table created"))
+
+            for user in user_data:
+                if insert_into_user_table(user):
+                    logging.info(green(f"User: {user['uid']} added successfully"))
+
+            for address in users_addresss_data:
+                if insert_into_address_table(address):
+                    logging.info(
+                        green(f"Address for User: {address['uid']} added successfully")
+"""
 import logging
 from typing import Literal
 
 import psycopg2
 import tomli
-from simple_chalk import green, red, yellow
+from simple_chalk import red
 
 logging.basicConfig(
     level=logging.INFO,
