@@ -1,10 +1,12 @@
 """ Data Retrieval and Serialization """
-
+import json
 import logging
 
 import psycopg2
 import tomli
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from caching import get_user_from_redis
 
@@ -13,10 +15,21 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - line:%(lineno)d - %(message)s",
 )
 
-app = FastAPI()
-
 with open("config.toml", "rb") as f:
     c = tomli.load(f)
+
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Mount the Frontend
+app.mount("/static", StaticFiles(directory="./static/dist"), name="static")
 
 
 @app.get("/")
@@ -76,9 +89,9 @@ async def get_user(user_id: str):
                     )
                     result = curs.fetchall()
 
-                    return {"postgres_data": result}
+                    return result
 
         except psycopg2.Error as e:
             return {"message": str(e)}
     else:
-        return {"redis_data": redis}
+        return redis
