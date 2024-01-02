@@ -47,9 +47,9 @@ async def list_users():
                     SELECT uid FROM users;
                     """
                 )
-                result = curs.fetchall()
+                user_list = curs.fetchall()
 
-                return {"postgres_data": result}
+                return user_list
 
     except psycopg2.Error as e:
         return {"message": str(e)}
@@ -87,9 +87,10 @@ async def get_user(user_id: str):
                         """,
                         (user_id,),
                     )
-                    result = curs.fetchall()
 
-                    return result
+                    postgres = curs.fetchall()
+
+                    return postgres
 
         except psycopg2.Error as e:
             return {"message": str(e)}

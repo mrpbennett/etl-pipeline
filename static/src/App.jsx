@@ -61,20 +61,18 @@ function App() {
 
   return (
     <div className="container mx-auto">
-      <div className="grid grid-cols-2 gap-4 mt-10">
+      <div className="grid grid-cols-2 gap-8 mt-10">
         <div>
           <h1 className="font-bold mb-4">Current users</h1>
-          {Object.entries(users).map(([key, array]) => (
-            <ol key={key}>
-              {array.map(item => (
-                <li
-                  key={item}
-                  className="font-mono hover:cursor-pointer hover:text-blue-500"
-                  onClick={() => getUser(item)}
-                >
-                  {item}
-                </li>
-              ))}
+          {users.map(item => (
+            <ol key={item}>
+              <li
+                key={item}
+                className="font-mono hover:cursor-pointer hover:text-blue-500"
+                onClick={() => getUser(item)}
+              >
+                {item}
+              </li>
             </ol>
           ))}
         </div>
