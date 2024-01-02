@@ -13,7 +13,15 @@ The data is then extracted from the JSON string and any PII is hashed using a sa
 Once data is extracted and hashed it's then stored inside two Postgres tables.
 
 The same data is also passed to Redis for caching for quicker retrival.
-   
+
+Order of module calls
+
+1. get_data.py
+2. validate.py
+3. clean_up.py
+4. extraction.py & salt.py
+5. storage.py & caching.py
+
 """
 
 import json
@@ -22,6 +30,7 @@ import logging
 import tomli
 from simple_chalk import blue, green, red, yellow
 
+from caching import add_user_to_redis, get_user_from_redis
 from clean_up import data_clean_up
 from extaction import extract_address_data_for_storage, extract_user_data_for_storage
 from get_data import get_user_data
@@ -68,39 +77,50 @@ def main():
         user_data = extract_user_data_for_storage(json_data)
 
         # Extract users address data and return a list of dicts
-        users_addresss_data = extract_address_data_for_storage(json_data)
+        users_address_data = extract_address_data_for_storage(json_data)
 
         """
-        Now data has been retrieved, validated and clean now INSERT data into Postgres
-        tables users and users_address
+        Now data has been retrieved, validated and clean now insert into Redis
+        for caching
+        """
+
+        add_user_to_redis(user_data, users_address_data)
+
+        """
+        INSERT data into Postgres tables users and users_address
         """
 
         # Check if users and users_addres tables exists already
         if check_table_exists("users") and check_table_exists("users_address"):
             for user in user_data:
+                # Add user into Postgres for permenant storage
                 if insert_into_user_table(user):
-                    logging.info(green(f"User: {user['uid']} added successfully"))
+                    logging.info(
+                        f"User: {blue(user['uid'])} added successfully into Postgres"
+                    )
 
-            for address in users_addresss_data:
+            for address in users_address_data:
                 if insert_into_address_table(address):
                     logging.info(
-                        green(f"Address for User: {address['uid']} added successfully")
+                        f"User: {blue(address['uid'])} address has been added successfully into Postgres"
                     )
         else:
             # IF tables do not exist create and add data
             if create_user_table():
-                logging.info(blue("user table created"))
+                logging.info(yellow("users table was created"))
             if create_address_table():
-                logging.info(blue("users_address table created"))
+                logging.info(yellow("users_address table was created"))
 
             for user in user_data:
                 if insert_into_user_table(user):
-                    logging.info(green(f"User: {user['uid']} added successfully"))
+                    logging.info(
+                        f"User: {blue(user['uid'])} added successfully into Postgres"
+                    )
 
-            for address in users_addresss_data:
+            for address in users_address_data:
                 if insert_into_address_table(address):
                     logging.info(
-                        green(f"Address for User: {address['uid']} added successfully")
+                        f"User: {blue(address['uid'])} address has been added successfully into Postgres"
                     )
 
 

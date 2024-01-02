@@ -29,12 +29,12 @@ def get_user_data() -> dict:
 
     Raises:
         HTTPError: if an HTTP error occurred
-        Timeut: Incase a Timeout has occurred
+        Timeout: Incase a Timeout has occurred
     """
     try:
         # MAX requests is 100
         response = requests.get(
-            f"https://random-data-api.com/api/v2/users?size=100&response_type=json"
+            f"https://random-data-api.com/api/v2/users?size=5&response_type=json"
         )
 
         response.raise_for_status()

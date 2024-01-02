@@ -10,9 +10,8 @@ Create a data pipeline that ingests user data via an API, processes and stores i
 2. **Python & Pandas**: For programming and data manipulation.
 3. **Redis**: Caching recent data for quick access.
 4. **Postgres**: Long-term data storage.
-5. **Serialization/Deserialization**: JSON or another format for data serialization during retrieval.
-6. **FastAPI** For an API endpoint for data retrieval
-7. **Docker**: Containerization of the entire pipeline.
+5. **FastAPI** For an API endpoint for data retrieval
+6. **Docker**: Containerization of the entire pipeline.
 
 ## Steps
 
@@ -25,7 +24,7 @@ Create a data pipeline that ingests user data via an API, processes and stores i
 3. **Data Storage**:
    - Design and implement a Postgres database schema for weather data.
    - Store processed data from Pandas into Postgres.
-4. **Data Retrieval and Serialization**:
+4. **Data Retrieval**:
    - API endpoint (e.g., using Flask) for data retrieval.
    - Serialization of data in structured format (JSON).
 5. **Dockerization**:
@@ -39,7 +38,6 @@ Create a data pipeline that ingests user data via an API, processes and stores i
 
 - Data pipeline architecture.
 - Skills in Python, Pandas, Redis, Postgres, FastAPI and Docker.
-- Data serialization/deserialization.
 
 ## Further Enhancements
 
