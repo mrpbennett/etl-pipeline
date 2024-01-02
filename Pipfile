@@ -1,0 +1,20 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fastapi = {extras = ["all"], version = "*"}
+redis = "*"
+pandas = "*"
+psycopg2-binary = "*"
+requests = "*"
+tomli = "*"
+simple-chalk = "*"
+boto3 = "*"
+pyment = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.11"
