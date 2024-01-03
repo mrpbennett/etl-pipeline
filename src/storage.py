@@ -37,6 +37,7 @@ Typical usage example:
                         green(f"Address for User: {address['uid']} added successfully")
 """
 import logging
+import os
 from datetime import datetime
 from typing import Literal
 
@@ -49,7 +50,8 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - line:%(lineno)d - %(message)s",
 )
 
-with open("../config.toml", "rb") as f:
+
+with open("config.toml", "rb") as f:
     c = tomli.load(f)
 
 

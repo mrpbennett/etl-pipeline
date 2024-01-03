@@ -28,7 +28,6 @@ import json
 import logging
 import time
 
-import tomli
 from simple_chalk import blue, yellow
 
 from caching import add_user_to_redis

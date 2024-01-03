@@ -8,14 +8,15 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from caching import get_user_from_redis
+from src.caching import get_user_from_redis
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - line:%(lineno)d - %(message)s",
 )
 
-with open("../config.toml", "rb") as f:
+
+with open("config.toml", "rb") as f:
     c = tomli.load(f)
 
 app = FastAPI()
