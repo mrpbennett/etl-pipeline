@@ -1,8 +1,35 @@
 version: '3.4'
 
+volumes:
+  postgres_data:
+
 services:
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - '6379:6379'
+
+  postgres:
+    image: postgres:latest
+    restart: always
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_PASSWORD: 'password'
+      POSTGRES_USER: 'postgres'
+      POSTGRES_DB: 'postgres'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
   etlpipeline:
     image: etlpipeline
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: ./Dockerfile.main
+
+  etlapi:
+    image: etlapi
+    build:
+      context: .
+      dockerfile: ./Dockerfile.api
