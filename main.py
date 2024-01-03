@@ -26,6 +26,7 @@ Order of module calls
 
 import json
 import logging
+import time
 
 import tomli
 from simple_chalk import blue, green, red, yellow
@@ -53,75 +54,86 @@ with open("config.toml", "rb") as f:
 
 
 def main():
-    # Get Data from API. Max requests = 100
-    data_to_be_process = get_user_data()
+    counter = 0
+    max_count = 10
 
-    # Validate Data - validate_json: retuns True
-    if validate_json(data_to_be_process):
-        """
-        Clean Data by removing certain cols using Pandas DataFrame returns pd.DataFrame
-        that is then converted to JSON string for storage enabling extraction
-        """
+    # Each while loop will represent one daily data dump.
+    # 24hrs = 2 mins
+    # 10 days worth of data in 20 mins
+    while counter < max_count:
+        # Get Data from API. Max requests = 100
+        data_to_be_process = get_user_data()
 
-        json_data = json.loads(
-            data_clean_up(data_to_be_process).to_json(orient="records")
-        )
+        # Validate Data - validate_json: retuns True
+        if validate_json(data_to_be_process):
+            """
+            Clean Data by removing certain cols using Pandas DataFrame returns pd.DataFrame
+            that is then converted to JSON string for storage enabling extraction
+            """
 
-        """
-        Now data has been retrieved, validated, cleaned and converted into JSON. 
-        Now extract two objects of data to insert into relevant tables and Redis
-        for caching.
-        """
+            json_data = json.loads(
+                data_clean_up(data_to_be_process).to_json(orient="records")
+            )
 
-        # Extract user data and return a list of dicts
-        user_data = extract_user_data_for_storage(json_data)
+            """
+            Now data has been retrieved, validated, cleaned and converted into JSON. 
+            Now extract two objects of data to insert into relevant tables and Redis
+            for caching.
+            """
 
-        # Extract users address data and return a list of dicts
-        users_address_data = extract_address_data_for_storage(json_data)
+            # Extract user data and return a list of dicts
+            user_data = extract_user_data_for_storage(json_data)
 
-        """
-        Now data has been retrieved, validated and clean now insert into Redis
-        for caching
-        """
+            # Extract users address data and return a list of dicts
+            users_address_data = extract_address_data_for_storage(json_data)
 
-        add_user_to_redis(user_data, users_address_data)
+            """
+            Now data has been retrieved, validated and clean now insert into Redis
+            for caching
+            """
 
-        """
-        INSERT data into Postgres tables users and users_address
-        """
+            add_user_to_redis(user_data, users_address_data)
 
-        # Check if users and users_addres tables exists already
-        if check_table_exists("users") and check_table_exists("users_address"):
-            for user in user_data:
-                # Add user into Postgres for permenant storage
-                if insert_into_user_table(user):
-                    logging.info(
-                        f"User: {blue(user['uid'])} added successfully into Postgres"
-                    )
+            """
+            INSERT data into Postgres tables users and users_address
+            """
 
-            for address in users_address_data:
-                if insert_into_address_table(address):
-                    logging.info(
-                        f"User: {blue(address['uid'])} address has been added successfully into Postgres"
-                    )
-        else:
-            # IF tables do not exist create and add data
-            if create_user_table():
-                logging.info(yellow("users table was created"))
-            if create_address_table():
-                logging.info(yellow("users_address table was created"))
+            # Check if users and users_addres tables exists already
+            if check_table_exists("users") and check_table_exists("users_address"):
+                for user in user_data:
+                    # Add user into Postgres for permenant storage
+                    if insert_into_user_table(user):
+                        logging.info(
+                            f"User: {blue(user['uid'])} added successfully into Postgres"
+                        )
 
-            for user in user_data:
-                if insert_into_user_table(user):
-                    logging.info(
-                        f"User: {blue(user['uid'])} added successfully into Postgres"
-                    )
+                for address in users_address_data:
+                    if insert_into_address_table(address):
+                        logging.info(
+                            f"User: {blue(address['uid'])} address has been added successfully into Postgres"
+                        )
+            else:
+                # IF tables do not exist create and add data
+                if create_user_table():
+                    logging.info(yellow("users table was created"))
+                if create_address_table():
+                    logging.info(yellow("users_address table was created"))
 
-            for address in users_address_data:
-                if insert_into_address_table(address):
-                    logging.info(
-                        f"User: {blue(address['uid'])} address has been added successfully into Postgres"
-                    )
+                for user in user_data:
+                    if insert_into_user_table(user):
+                        logging.info(
+                            f"User: {blue(user['uid'])} added successfully into Postgres"
+                        )
+
+                for address in users_address_data:
+                    if insert_into_address_table(address):
+                        logging.info(
+                            f"User: {blue(address['uid'])} address has been added successfully into Postgres"
+                        )
+
+        counter += 1
+        time.sleep(120)  # Sleep for 2 minutes
+        logging.info(yellow("Waiting for next batch of users to process..."))
 
 
 if __name__ == "__main__":

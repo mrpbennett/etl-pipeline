@@ -60,10 +60,18 @@ function App() {
   }
 
   return (
-    <div className="container mx-auto">
-      <div className="grid grid-cols-2 gap-8 mt-10">
+    <div className="container mx-auto max-w-[960px] overflow-auto">
+      <div>
+        <p className="mt-8 text-lg">
+          Click on the <code>uid</code> to display the relevant data for that
+          user...
+        </p>
+      </div>
+      <div className="grid grid-cols-2 gap-4 mt-10">
         <div>
-          <h1 className="font-bold mb-4">Current users</h1>
+          <h1 className="font-bold mb-4">
+            Current user <code>uid</code>s
+          </h1>
           {users.map(item => (
             <ol key={item}>
               <li

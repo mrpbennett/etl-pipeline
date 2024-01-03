@@ -37,6 +37,7 @@ Typical usage example:
                         green(f"Address for User: {address['uid']} added successfully")
 """
 import logging
+from datetime import datetime
 from typing import Literal
 
 import psycopg2
@@ -74,7 +75,8 @@ def create_user_table() -> Literal[True]:
                                 email VARCHAR(255),
                                 phone_number VARCHAR(255),
                                 social_insurance_number VARCHAR(255),
-                                date_of_birth VARCHAR(255)
+                                date_of_birth VARCHAR(255),
+                                ts INT
                             );
                     """
                 )
@@ -106,6 +108,7 @@ def create_address_table() -> Literal[True]:
                                 zip_code VARCHAR(255),
                                 state VARCHAR(255),
                                 country VARCHAR(255),
+                                ts INT,
 
                                 PRIMARY KEY (uid),
                                 FOREIGN KEY (uid) REFERENCES users(uid)
@@ -153,10 +156,10 @@ def insert_into_user_table(user_data: dict) -> Literal[True]:
                 curs.execute(
                     """
                         INSERT INTO users (
-                            uid, password, first_name, last_name, username, email, phone_number, social_insurance_number, date_of_birth
+                            uid, password, first_name, last_name, username, email, phone_number, social_insurance_number, date_of_birth, ts
                         )
                         VALUES (
-                            %s, %s, %s, %s, %s, %s, %s, %s, %s
+                            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
                         );
                     """,
                     (
@@ -169,6 +172,7 @@ def insert_into_user_table(user_data: dict) -> Literal[True]:
                         user_data["phone_number"],
                         user_data["social_insurance_number"],
                         user_data["date_of_birth"],
+                        int(datetime.timestamp(datetime.now())),
                     ),
                 )
 
@@ -191,10 +195,10 @@ def insert_into_address_table(address_data: dict) -> Literal[True]:
                 curs.execute(
                     """
                         INSERT INTO users_address (
-                            uid, city, street_name, street_address, zip_code, state, country 
+                            uid, city, street_name, street_address, zip_code, state, country, ts
                         )
                         VALUES (
-                            %s, %s, %s, %s, %s, %s, %s
+                            %s, %s, %s, %s, %s, %s, %s, %s
                         );
                     """,
                     (
@@ -205,6 +209,7 @@ def insert_into_address_table(address_data: dict) -> Literal[True]:
                         address_data["zip_code"],
                         address_data["state"],
                         address_data["country"],
+                        int(datetime.timestamp(datetime.now())),
                     ),
                 )
 
