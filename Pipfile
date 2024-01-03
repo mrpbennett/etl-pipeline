@@ -13,6 +13,7 @@ tomli = "*"
 simple-chalk = "*"
 boto3 = "*"
 pyment = "*"
+pytest = "*"
 
 [dev-packages]
 

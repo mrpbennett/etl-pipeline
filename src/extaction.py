@@ -37,7 +37,7 @@ def extract_user_data_for_storage(data: dict) -> list:
         except TypeError as e:
             # Handle incorrect data types
             logging.error(red(f"Type error: {e}"))
-            raise red(e)
+            raise red(e) from e
 
     return user_data
 
@@ -68,6 +68,6 @@ def extract_address_data_for_storage(data: dict) -> list:
         except TypeError as e:
             # Handle incorrect data types
             logging.error(red(f"Type error: {e}"))
-            raise red(e)
+            raise red(e) from e
 
     return address_data

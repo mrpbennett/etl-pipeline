@@ -29,9 +29,9 @@ import logging
 import time
 
 import tomli
-from simple_chalk import blue, green, red, yellow
+from simple_chalk import blue, yellow
 
-from caching import add_user_to_redis, get_user_from_redis
+from caching import add_user_to_redis
 from clean_up import data_clean_up
 from extaction import extract_address_data_for_storage, extract_user_data_for_storage
 from get_data import get_user_data
@@ -49,18 +49,22 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - line:%(lineno)d - %(message)s",
 )
 
-with open("config.toml", "rb") as f:
-    c = tomli.load(f)
-
 
 def main():
-    counter = 0
-    max_count = 10
+    """
+    Main function for processing daily data dumps.
 
-    # Each while loop will represent one daily data dump.
-    # 24hrs = 2 mins
-    # 10 days worth of data in 20 mins
-    while counter < max_count:
+    The function retrieves data from an API, validates and cleans the data, extracts relevant information,
+    and inserts the data into relevant tables in Postgres and Redis for caching.
+    The function runs in a loop, processing data dumps every 2 minutes.
+
+    Returns:
+        None
+    """
+    # Each loop will represent one daily data dump.
+    max_count = 10
+    # 24hrs = 2 mins- 10 days worth of data in 20 mins
+    for _ in range(max_count):
         # Get Data from API. Max requests = 100
         data_to_be_process = get_user_data()
 
@@ -98,40 +102,27 @@ def main():
             INSERT data into Postgres tables users and users_address
             """
 
-            # Check if users and users_addres tables exists already
-            if check_table_exists("users") and check_table_exists("users_address"):
-                for user in user_data:
-                    # Add user into Postgres for permenant storage
-                    if insert_into_user_table(user):
-                        logging.info(
-                            f"User: {blue(user['uid'])} added successfully into Postgres"
-                        )
-
-                for address in users_address_data:
-                    if insert_into_address_table(address):
-                        logging.info(
-                            f"User: {blue(address['uid'])} address has been added successfully into Postgres"
-                        )
-            else:
+            if not check_table_exists("users") or not check_table_exists(
+                "users_address"
+            ):
                 # IF tables do not exist create and add data
                 if create_user_table():
                     logging.info(yellow("users table was created"))
                 if create_address_table():
                     logging.info(yellow("users_address table was created"))
 
-                for user in user_data:
-                    if insert_into_user_table(user):
-                        logging.info(
-                            f"User: {blue(user['uid'])} added successfully into Postgres"
-                        )
+            for user in user_data:
+                # Add user into Postgres for permenant storage
+                if insert_into_user_table(user):
+                    logging.info(
+                        f"User: {blue(user['uid'])} added successfully into Postgres"
+                    )
 
-                for address in users_address_data:
-                    if insert_into_address_table(address):
-                        logging.info(
-                            f"User: {blue(address['uid'])} address has been added successfully into Postgres"
-                        )
-
-        counter += 1
+            for address in users_address_data:
+                if insert_into_address_table(address):
+                    logging.info(
+                        f"User: {blue(address['uid'])} address has been added successfully into Postgres"
+                    )
         time.sleep(120)  # Sleep for 2 minutes
         logging.info(yellow("Waiting for next batch of users to process..."))
 
