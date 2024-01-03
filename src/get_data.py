@@ -34,7 +34,7 @@ def get_user_data() -> dict:
     try:
         # MAX requests is 100
         response = requests.get(
-            f"https://random-data-api.com/api/v2/users?size=10&response_type=json"
+            "https://random-data-api.com/api/v2/users?size=10&response_type=json"
         )
 
         response.raise_for_status()
@@ -46,10 +46,6 @@ def get_user_data() -> dict:
 
         return data
 
-    except HTTPError as e:
-        logging.warning(red(f"ERROR: {e}"))
-        raise e
-
-    except Timeout as e:
+    except (HTTPError, Timeout) as e:
         logging.warning(red(f"ERROR: {e}"))
         raise e

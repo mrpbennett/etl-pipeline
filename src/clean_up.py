@@ -10,16 +10,12 @@ Typical usage example:
 import logging
 
 import pandas as pd
-import tomli
 from simple_chalk import green, red
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - line:%(lineno)d - %(filename)s - %(module)s  %(message)s",
 )
-
-with open("config.toml", "rb") as f:
-    c = tomli.load(f)
 
 
 def data_clean_up(data: dict) -> pd.DataFrame:

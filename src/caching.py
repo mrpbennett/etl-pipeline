@@ -9,7 +9,6 @@ Typical usage example:
 import logging
 
 import redis
-import tomli
 from redis import RedisError
 from simple_chalk import blue, red
 
@@ -17,9 +16,6 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - line:%(lineno)d - %(message)s",
 )
-
-with open("config.toml", "rb") as f:
-    c = tomli.load(f)
 
 
 # REDIS connection
@@ -66,7 +62,7 @@ def add_user_to_redis(user_data: list, user_address_data: list) -> None:
                 "country": uad.get("country", "n/a"),
             }
 
-            full_user_data: dict = {**users_data, **address_data}
+            full_user_data: dict = users_data | address_data
 
             # Add user to Redis
             redis.hset(uid, mapping=full_user_data)
@@ -97,8 +93,6 @@ def get_user_from_redis(key: str) -> dict:
     """
     try:
         data = {}
-
-        # TODO: Set TTL to 5mins
 
         if redis.exists(key):
             data: dict = redis.hgetall(key)

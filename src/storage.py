@@ -49,7 +49,7 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - line:%(lineno)d - %(message)s",
 )
 
-with open("config.toml", "rb") as f:
+with open("../config.toml", "rb") as f:
     c = tomli.load(f)
 
 
