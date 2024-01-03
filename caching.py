@@ -75,7 +75,7 @@ def add_user_to_redis(user_data: list, user_address_data: list) -> None:
             redis.expire(uid, 120)
 
         logging.info(
-            f"{red(len(user_data))} Users have been cached in Redis, with a TTL of {red("2 mins")}."
+            f"{red(len(user_data))} Users have been cached in Redis, with a TTL of 2 mins"
         )
 
     except ValueError as e:
