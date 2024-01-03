@@ -30,7 +30,8 @@ def add_user_to_redis(user_data: list, user_address_data: list) -> None:
     """Add user to Redis for caching
 
     Combine the user and users address data into one dictonary to cache into Redis
-    under the same uid
+    under the same uid. A TTL of 2mins is also set to each key to keep the Redis cache
+    as fresh as possible.
 
     Agrs:
         user_data: A list of a JSON dicts
@@ -67,9 +68,15 @@ def add_user_to_redis(user_data: list, user_address_data: list) -> None:
 
             full_user_data: dict = {**users_data, **address_data}
 
+            # Add user to Redis
             redis.hset(uid, mapping=full_user_data)
 
-        logging.info(f"{red(len(user_data))} Users have been cached in Redis")
+            # Set TTL in Redis for 2 min
+            redis.expire(uid, 120)
+
+        logging.info(
+            f"{red(len(user_data))} Users have been cached in Redis, with a TTL of 2 mins"
+        )
 
     except ValueError as e:
         raise e
@@ -90,6 +97,8 @@ def get_user_from_redis(key: str) -> dict:
     """
     try:
         data = {}
+
+        # TODO: Set TTL to 5mins
 
         if redis.exists(key):
             data: dict = redis.hgetall(key)

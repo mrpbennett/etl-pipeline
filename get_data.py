@@ -22,7 +22,7 @@ logging.basicConfig(
 def get_user_data() -> dict:
     """Generate random user data from API call
 
-    Calls a Random user generator API to collect data on 100 random users
+    Calls a Random user generator API to collect data on 10 random users
 
     Returns:
         A JSON object of 100 random users
@@ -34,7 +34,7 @@ def get_user_data() -> dict:
     try:
         # MAX requests is 100
         response = requests.get(
-            f"https://random-data-api.com/api/v2/users?size=100&response_type=json"
+            f"https://random-data-api.com/api/v2/users?size=10&response_type=json"
         )
 
         response.raise_for_status()

@@ -44,7 +44,7 @@ async def list_users():
             with conn.cursor() as curs:
                 curs.execute(
                     """
-                    SELECT uid FROM users;
+                    SELECT uid FROM users ORDER BY ts DESC;
                     """
                 )
                 user_list = curs.fetchall()
