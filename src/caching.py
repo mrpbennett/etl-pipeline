@@ -19,7 +19,7 @@ logging.basicConfig(
 
 
 # REDIS connection
-redis = redis.Redis(host="localhost", port=6379, decode_responses=True)
+redis = redis.Redis(host="redis", port=6379, decode_responses=True)
 
 
 def add_user_to_redis(user_data: list, user_address_data: list) -> None:

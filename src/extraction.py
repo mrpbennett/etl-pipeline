@@ -3,7 +3,7 @@ from datetime import datetime
 
 from simple_chalk import green, red, yellow
 
-from src.salt import hash_pii
+from salt import hash_pii
 
 
 def extract_user_data_for_storage(data: dict) -> list:

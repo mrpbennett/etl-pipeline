@@ -32,7 +32,6 @@ current_dir = os.path.dirname(__file__)
 # Path to the static directory
 static_dir = os.path.join("", "static/dist")
 
-
 # Mount the Frontend
 app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
@@ -55,7 +54,7 @@ async def list_users():
     """
     try:
         with psycopg2.connect(
-            dbname="postgres", user="postgres", password="password", host="localhost"
+            dbname="postgres", user="postgres", password="password", host="postgres"
         ) as conn:
             with conn.cursor() as curs:
                 curs.execute(
@@ -90,7 +89,7 @@ async def get_user(user_id: str):
         return redis
     try:
         with psycopg2.connect(
-            dbname="postgres", user="postgres", password="password", host="localhost"
+            dbname="postgres", user="postgres", password="password", host="postgres"
         ) as conn:
             with conn.cursor() as curs:
                 curs.execute(
