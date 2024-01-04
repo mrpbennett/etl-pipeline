@@ -1,8 +1,0 @@
-[db]
-host = "localhost"
-dbname = "postgres"
-user = "postgres"
-password = "password"
-port = 5432
-
-[redis]

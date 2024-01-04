@@ -1,5 +1,5 @@
 # For more information, please refer to https://aka.ms/vscode-docker-python
-FROM python:3.11-slim
+FROM python:3.10-slim
 
 EXPOSE 8000
 
@@ -9,14 +9,26 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # Turns off buffering for easier container logging
 ENV PYTHONUNBUFFERED=1
 
-# Install pip requirements
-COPY Pipfile Pipfile.lock ./
-RUN python -m pip install --upgrade pip
-RUN pip install pipenv && pipenv install --dev --system --deploy
+# Install system dependencies required for some Python packages
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
 
+# Set the working directory inside the container
 WORKDIR /app
-COPY src/ src/
-COPY config.toml .
+
+# Copy the Pipfile and Pipfile.lock into the container
+COPY Pipfile Pipfile.lock /app/
+
+# Install pipenv
+RUN pip install --no-cache-dir pipenv
+
+# Install Python dependencies using pipenv
+RUN pipenv install --system --deploy
+
+# Copy the rest of the application files into the container
+COPY . /app/
 
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
 # For more info, please refer to https://aka.ms/vscode-docker-python-configure-containers

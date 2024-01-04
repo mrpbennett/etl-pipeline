@@ -9,6 +9,8 @@ services:
     restart: always
     ports:
       - '6379:6379'
+    networks:
+      - etlnetwork
 
   postgres:
     image: postgres:latest
@@ -21,15 +23,25 @@ services:
       POSTGRES_DB: 'postgres'
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - etlnetwork
 
   etlpipeline:
     image: etlpipeline
     build:
       context: .
       dockerfile: ./Dockerfile.main
+    networks:
+      - etlnetwork
 
   etlapi:
     image: etlapi
     build:
       context: .
       dockerfile: ./Dockerfile.api
+    networks:
+      - etlnetwork
+
+networks:
+  etlnetwork:
+    driver: bridge

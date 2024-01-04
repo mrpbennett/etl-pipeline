@@ -16,7 +16,7 @@
 
 Create a data pipeline that ingests user data via an API, processes and stores it, and then retrieves it in a serialized format.
 
-## Components
+### Components
 
 1. **Data Source**: Random API for fake user data
 2. **Python & Pandas**: For programming and data manipulation.
@@ -25,34 +25,61 @@ Create a data pipeline that ingests user data via an API, processes and stores i
 5. **FastAPI** For an API endpoint for data retrieval
 6. **Docker**: Containerization of the entire pipeline.
 
-## Steps
+### Steps
 
 1. **Data Ingestion**:
-   - Python script to fetch data from the OpenWeatherMap API.
+   - Python script to fetch data random user data from an API.
+     - `get_data.py`
    - Pandas for data cleaning and transformation.
+     - `clean_up.py`
 2. **Caching Layer**:
-   - Redis setup for caching recent weather data.
+   - Redis setup for caching recent User data and set a TTL.
+     - `caching.py`
    - Python logic for data retrieval from Redis and Postgres.
+     - `api.py`
 3. **Data Storage**:
-   - Design and implement a Postgres database schema for weather data.
-   - Store processed data from Pandas into Postgres.
+   - Design and implement a Postgres database schema for the user data.
+   - Store processed data into Postgres.
+     - `storage.py`
 4. **Data Retrieval**:
-   - API endpoint (e.g., using Flask) for data retrieval.
-   - Serialization of data in structured format (JSON).
+   - API endpoint (e.g., using FastAPI) for data retrieval.
+     - `api.py`
 5. **Dockerization**:
    - Dockerfile for the Python application.
+     - `Dockerfile.main`
+     - `Dockerfile.api`
    - Docker Compose for orchestrating Redis and Postgres services.
+     - `docker-compose.yml`
 6. **Testing and Deployment**:
    - Unit tests for pipeline components.
-   - Deployment on local/cloud platform.
+     - `./tests`
 
-## Learning Outcomes
+### Learning Outcomes
 
 - Data pipeline architecture.
 - Skills in Python, Pandas, Redis, Postgres, FastAPI and Docker.
 
-## Further Enhancements
+### Further Enhancements
 
-- Front-end dashboard for data display.
-- Additional data sources for comparative analysis.
+- ~~Front-end dashboard for data display.~~
 - Advanced data processing features.
+
+## How to test the project
+
+Clone the repo
+
+```bash
+git clone https://github.com/mrpbennett/etl-pipeline.git
+```
+
+`cd` into the cloned repo and run `docker compose up`
+
+```bash
+docker compose up
+```
+
+Then head over to the URL to access the front end to see where the data is stored
+
+```text
+http://127.0.0.1:8000/static/index.html
+```
