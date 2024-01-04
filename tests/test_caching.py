@@ -1,73 +1,115 @@
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
-import redis
 
-from src.caching import get_user_from_redis
-
-# Constants for test cases
-EXISTING_KEY = "existing_user"
-NON_EXISTING_KEY = "non_existing_user"
-USER_DATA = {"name": "John", "age": "30"}
-
-# Mock Redis client
-mock_redis_client = MagicMock()
-
-# Test cases for non-empty output
-test_cases_non_empty = [
-    ("happy_path_existing", EXISTING_KEY, USER_DATA),
-]
-
-# Test cases for empty output
-test_cases_empty = [
-    ("happy_path_empty", NON_EXISTING_KEY, {}),
-    ("edge_case_empty_key", "", {}),
-]
-
-# Test cases with RedisError
-test_cases_error = [
-    ("error_case_redis_error", EXISTING_KEY, redis.RedisError),
-]
+from src.caching import add_user_to_redis
 
 
-@pytest.mark.parametrize("test_id, key, expected_output", test_cases_non_empty)
-def test_get_user_from_redis_non_empty_output(test_id, key, expected_output):
-    with patch("caching.redis", mock_redis_client):
-        # Arrange
-        mock_redis_client.exists.return_value = True
-        mock_redis_client.hgetall.return_value = expected_output
+def test_add_user_to_redis(mocker):
+    # Mock the Redis client
+    redis_mock = mocker.MagicMock()
+    mocker.patch("caching.redis", redis_mock)
 
-        # Act
-        result = get_user_from_redis(key)
+    # Input data
+    user_data = [
+        {
+            "uid": "123",
+            "password": "password123",
+            "first_name": "John",
+            "last_name": "Doe",
+            "username": "johndoe",
+            "email": "johndoe@example.com",
+            "phone_number": "1234567890",
+            "social_insurance_number": "123-45-6789",
+            "date_of_birth": "1990-01-01",
+        }
+    ]
+    user_address_data = [
+        {
+            "uid": "123",
+            "city": "New York",
+            "street_name": "Broadway",
+            "street_address": "123",
+            "zip_code": "10001",
+            "state": "NY",
+            "country": "USA",
+        }
+    ]
 
-        # Assert
-        assert result == expected_output
-        mock_redis_client.hgetall.assert_called_once_with(key)
+    # Call the function
+    add_user_to_redis(user_data, user_address_data)
+
+    # Assert that the Redis client methods were called correctly
+    redis_mock.hset.assert_called_once_with(
+        "123",
+        mapping={
+            "password": "password123",
+            "first_name": "John",
+            "last_name": "Doe",
+            "username": "johndoe",
+            "email": "johndoe@example.com",
+            "phone_number": "1234567890",
+            "social_insurance_number": "123-45-6789",
+            "date_of_birth": "1990-01-01",
+            "city": "New York",
+            "street_name": "Broadway",
+            "street_address": "123",
+            "zip_code": "10001",
+            "state": "NY",
+            "country": "USA",
+        },
+    )
+    redis_mock.expire.assert_called_once_with("123", 120)
+    assert redis_mock.hset.call_count == 1
+    assert redis_mock.expire.call_count == 1
 
 
-@pytest.mark.parametrize("test_id, key, expected_output", test_cases_empty)
-def test_get_user_from_redis_empty_output(test_id, key, expected_output):
-    with patch("caching.redis", mock_redis_client):
-        # Arrange
-        mock_redis_client.exists.return_value = False
-        mock_redis_client.hgetall.return_value = expected_output
+def test_add_user_to_redis_empty_data(mocker):
+    # Mock the Redis client
+    redis_mock = mocker.MagicMock()
+    mocker.patch("caching.redis", redis_mock)
 
-        # Act
-        result = get_user_from_redis(key)
+    # Input data
+    user_data = []
+    user_address_data = []
 
-        # Assert
-        assert result == expected_output
-        mock_redis_client.exists.assert_called_once_with(key)
-        assert not mock_redis_client.hgetall.called
+    # Call the function
+    add_user_to_redis(user_data, user_address_data)
+
+    # Assert that the Redis client methods were not called
+    assert redis_mock.hset.call_count == 0
+    assert redis_mock.expire.call_count == 0
 
 
-@pytest.mark.parametrize("test_id, key, exception", test_cases_error)
-def test_get_user_from_redis_with_error(test_id, key, exception):
-    with patch("caching.redis", mock_redis_client):
-        # Arrange
-        mock_redis_client.exists.side_effect = exception
-        mock_redis_client.hgetall.side_effect = exception
+def test_add_user_to_redis_invalid_data(mocker):
+    # Mock the Redis client
+    redis_mock = mocker.MagicMock()
+    mocker.patch("caching.redis", redis_mock)
 
-        # Act & Assert
-        with pytest.raises(redis.RedisError):
-            get_user_from_redis(key)
+    # Input data with missing uid
+    user_data = [
+        {
+            "password": "password123",
+            "first_name": "John",
+            "last_name": "Doe",
+            "username": "johndoe",
+            "email": "johndoe@example.com",
+            "phone_number": "1234567890",
+            "social_insurance_number": "123-45-6789",
+            "date_of_birth": "1990-01-01",
+        }
+    ]
+    user_address_data = [
+        {
+            "city": "New York",
+            "street_name": "Broadway",
+            "street_address": "123",
+            "zip_code": "10001",
+            "state": "NY",
+            "country": "USA",
+        }
+    ]
+
+    # Call the function and assert that it raises a ValueError
+    with pytest.raises(ValueError):
+        add_user_to_redis(user_data, user_address_data)

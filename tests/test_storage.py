@@ -1,49 +1,125 @@
+from datetime import datetime
 from unittest.mock import MagicMock, patch
 
 import pytest
 
-from src.storage import create_user_table
-
-# Constants for test readability
-HAPPY_PATH_ID = "happy_path"
-ERROR_CASE_ID = "error_case"
+from src.storage import insert_into_user_table
 
 
-@pytest.mark.parametrize(
-    "test_case_id",
-    [
-        (HAPPY_PATH_ID),
-        (ERROR_CASE_ID),
-    ],
-)
-def test_create_user_table(test_case_id):
-    # Arrange
-    mock_connect = MagicMock()
+@patch("psycopg2.connect")
+def test_insert_into_user_table_success(mock_connect):
+    # Mock the psycopg2 connection and cursor
     mock_cursor = MagicMock()
-    mock_connection = MagicMock()
-    mock_cursor_context = MagicMock()
-    mock_connect.return_value = mock_connection
-    mock_connection.cursor.return_value = mock_cursor_context
-    mock_cursor_context.__enter__.return_value = mock_cursor
+    mock_connect.return_value.__enter__.return_value.cursor.return_value = mock_cursor
 
-    # sourcery skip: no-conditionals-in-tests
-    if test_case_id == ERROR_CASE_ID:
-        mock_connect.side_effect = Exception("Connection failed")
+    # Input data
+    user_data = {
+        "uid": 1,
+        "password": "password123",
+        "first_name": "John",
+        "last_name": "Doe",
+        "username": "johndoe",
+        "email": "johndoe@example.com",
+        "phone_number": "1234567890",
+        "social_insurance_number": "123-45-6789",
+        "date_of_birth": "1990-01-01",
+    }
 
-    with patch("storage.psycopg2.connect", mock_connect):
-        if test_case_id == HAPPY_PATH_ID:
-            # Act
-            result = create_user_table()
+    # Call the function
+    result = insert_into_user_table(user_data)
 
-            # Assert
-            assert result is True
-            mock_connect.assert_called_once()
-            mock_cursor.execute.assert_called_once()
-            mock_connection.commit.assert_called_once()
-        elif test_case_id == ERROR_CASE_ID:
-            # Act & Assert
-            with pytest.raises(Exception, match="Connection failed"):
-                create_user_table()
-            mock_connect.assert_called_once()
-            mock_cursor.execute.assert_not_called()
-            mock_connection.commit.assert_not_called()
+    # Assert that the psycopg2 connect method is called with the correct parameters
+    mock_connect.assert_called_once_with(
+        dbname="postgres", user="postgres", password="password", host="localhost"
+    )
+
+    # Assert that the psycopg2 cursor method is called
+    mock_connect.return_value.__enter__.return_value.cursor.assert_called_once()
+
+    # Assert that the execute method is called with the correct SQL query and parameters
+    mock_cursor.execute.assert_called_once_with(
+        """
+            INSERT INTO users (
+                uid, password, first_name, last_name, username, email, phone_number, social_insurance_number, date_of_birth, ts
+            )
+            VALUES (
+                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+            );
+        """,
+        (
+            user_data["uid"],
+            user_data["password"],
+            user_data["first_name"],
+            user_data["last_name"],
+            user_data["username"],
+            user_data["email"],
+            user_data["phone_number"],
+            user_data["social_insurance_number"],
+            user_data["date_of_birth"],
+            int(datetime.timestamp(datetime.now())),
+        ),
+    )
+
+    # Assert that the function returns True
+    assert result is True
+
+
+@patch("psycopg2.connect")
+def test_insert_into_user_table_exception(mock_connect):
+    # Mock the psycopg2 connection and cursor
+    mock_cursor = MagicMock()
+    mock_connect.return_value.__enter__.return_value.cursor.return_value = mock_cursor
+
+    # Mock an exception during execution
+    mock_cursor.execute.side_effect = Exception("Database error")
+
+    # Input data
+    user_data = {
+        "uid": 1,
+        "password": "password123",
+        "first_name": "John",
+        "last_name": "Doe",
+        "username": "johndoe",
+        "email": "johndoe@example.com",
+        "phone_number": "1234567890",
+        "social_insurance_number": "123-45-6789",
+        "date_of_birth": "1990-01-01",
+    }
+
+    # Call the function
+    result = insert_into_user_table(user_data)
+
+    # Assert that the psycopg2 connect method is called with the correct parameters
+    mock_connect.assert_called_once_with(
+        dbname="postgres", user="postgres", password="password", host="localhost"
+    )
+
+    # Assert that the psycopg2 cursor method is called
+    mock_connect.return_value.__enter__.return_value.cursor.assert_called_once()
+
+    # Assert that the execute method is called with the correct SQL query and parameters
+    mock_cursor.execute.assert_called_once_with(
+        """
+            INSERT INTO users (
+                uid, password, first_name, last_name, username, email, phone_number, social_insurance_number, date_of_birth, ts
+            )
+            VALUES (
+                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+            );
+        """,
+        (
+            user_data["uid"],
+            user_data["password"],
+            user_data["first_name"],
+            user_data["last_name"],
+            user_data["username"],
+            user_data["email"],
+            user_data["phone_number"],
+            user_data["social_insurance_number"],
+            user_data["date_of_birth"],
+            int(datetime.timestamp(datetime.now())),
+        ),
+    )
+
+    # Assert that the function returns True
+    assert result is True

@@ -32,8 +32,11 @@ from simple_chalk import blue, yellow
 
 from caching import add_user_to_redis
 from clean_up import data_clean_up
-from extaction import extract_address_data_for_storage, extract_user_data_for_storage
 from get_data import get_user_data
+from src.extraction import (
+    extract_address_data_for_storage,
+    extract_user_data_for_storage,
+)
 from storage import (
     check_table_exists,
     create_address_table,
