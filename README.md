@@ -65,7 +65,7 @@ Create a data pipeline that ingests user data via an API, processes and stores i
 - ~~Front-end dashboard for data display.~~
 - Advanced data processing features.
 
-## How to test the project - Docker isn't working yet....
+## How to test the project
 
 Clone the repo
 
@@ -82,5 +82,5 @@ docker compose up
 Then head over to the URL to access the front end to see where the data is stored
 
 ```text
-http://127.0.0.1:8000/static/index.html
+http://127.0.0.1:80/static/index.html
 ```

@@ -7,7 +7,7 @@ function App() {
   const [user, setUser] = useState([])
 
   const getUser = async userID => {
-    await fetch(`http://127.0.0.1:8000/api/datapipe/${userID}`)
+    await fetch(`http://127.0.0.1:80/api/datapipe/${userID}`)
       .then(response => response.json())
       .then(data => setUser(data))
       .catch(error => console.error(error))
@@ -15,9 +15,11 @@ function App() {
 
   useEffect(() => {
     // generate a list of users on mount
-    fetch(`http://127.0.0.1:8000/api/datapipe/list-users`)
+    fetch(`http://127.0.0.1:80/api/datapipe/list-users`)
       .then(response => response.json())
-      .then(data => setUsers(data))
+      .then(data => {
+        setUsers(data)
+      })
       .catch(error => console.error(error))
   }, [])
 
@@ -72,17 +74,19 @@ function App() {
           <h1 className="font-bold mb-4">
             Current user <code>uid</code>s
           </h1>
-          {users.map(item => (
-            <ol key={item}>
-              <li
-                key={item}
-                className="font-mono hover:cursor-pointer hover:text-blue-500"
-                onClick={() => getUser(item)}
-              >
-                {item}
-              </li>
-            </ol>
-          ))}
+          {users.length === 0
+            ? () => <p>No users found</p>
+            : users.map(item => (
+                <ul key={item}>
+                  <li
+                    key={item}
+                    className="font-mono hover:cursor-pointer hover:text-blue-500"
+                    onClick={() => getUser(item)}
+                  >
+                    {item}
+                  </li>
+                </ul>
+              ))}
         </div>
         <div className="sticky top-0">
           <h1 className="font-bold mb-4">User data</h1>

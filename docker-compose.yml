@@ -26,19 +26,23 @@ services:
     networks:
       - etlnetwork
 
-  etlpipeline:
-    image: etlpipeline
+  pipeline:
+    image: etl-pipeline
     build:
       context: .
-      dockerfile: ./Dockerfile.main
+      dockerfile: ./Dockerfile
+    command: ['python', 'src/main.py']
     networks:
       - etlnetwork
 
-  etlapi:
-    image: etlapi
+  api:
+    image: etl-api
     build:
       context: .
-      dockerfile: ./Dockerfile.api
+      dockerfile: ./Dockerfile
+    command: ['uvicorn', 'src.api:app', '--host', '0.0.0.0', '--port', '80']
+    ports:
+      - '80:80'
     networks:
       - etlnetwork
 

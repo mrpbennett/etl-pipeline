@@ -58,7 +58,7 @@ def create_user_table() -> Literal[True]:
     """
     try:
         with psycopg2.connect(
-            dbname="postgres", user="postgres", password="password", host="localhost"
+            dbname="postgres", user="postgres", password="password", host="postgres"
         ) as conn:
             with conn.cursor() as curs:
                 curs.execute(
@@ -94,7 +94,7 @@ def create_address_table() -> Literal[True]:
     """
     try:
         with psycopg2.connect(
-            dbname="postgres", user="postgres", password="password", host="localhost"
+            dbname="postgres", user="postgres", password="password", host="postgres"
         ) as conn:
             with conn.cursor() as curs:
                 curs.execute(
@@ -126,7 +126,7 @@ def check_table_exists(table_name):
     """Check if table exists"""
     try:
         with psycopg2.connect(
-            dbname="postgres", user="postgres", password="password", host="localhost"
+            dbname="postgres", user="postgres", password="password", host="postgres"
         ) as conn:
             with conn.cursor() as curs:
                 curs.execute(
@@ -155,7 +155,7 @@ def insert_into_user_table(user_data: dict) -> Literal[True]:
 
     try:
         with psycopg2.connect(
-            dbname="postgres", user="postgres", password="password", host="localhost"
+            dbname="postgres", user="postgres", password="password", host="postgres"
         ) as conn:
             with conn.cursor() as curs:
                 curs.execute(
@@ -196,7 +196,7 @@ def insert_into_address_table(address_data: dict) -> Literal[True]:
     """
     try:
         with psycopg2.connect(
-            dbname="postgres", user="postgres", password="password", host="localhost"
+            dbname="postgres", user="postgres", password="password", host="postgres"
         ) as conn:
             with conn.cursor() as curs:
                 curs.execute(
