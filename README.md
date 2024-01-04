@@ -65,7 +65,7 @@ Create a data pipeline that ingests user data via an API, processes and stores i
 - ~~Front-end dashboard for data display.~~
 - Advanced data processing features.
 
-## How to test the project
+## How to test the project - Docker isn't working yet....
 
 Clone the repo
 
