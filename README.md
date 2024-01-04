@@ -3,7 +3,7 @@
 ![GitHub Pipenv locked Python version](https://img.shields.io/github/pipenv/locked/python-version/mrpbennett/etl-pipeline?style=for-the-badge)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=for-the-badge)](https://github.com/psf/black)
 
-![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/mrpbennett/etl-pipeline/sourcery.pr.yml?style=for-the-badge&label=sourcery)
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/mrpbennett/etl-pipeline/sourcery-pr.yml?style=for-the-badge&label=sourcery)
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/mrpbennett/etl-pipeline/python-package.yml?style=for-the-badge&label=build)
 
 ![FastAPI](https://img.shields.io/badge/fastapi-009688.svg?&style=for-the-badge&logo=fastapi&logoColor=white)

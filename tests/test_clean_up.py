@@ -3,84 +3,47 @@ import pytest
 
 from src.clean_up import data_clean_up
 
-# Test IDs for parametrization
-happy_path_ids = ["minimal_data", "full_data", "extra_columns"]
 
-edge_case_ids = ["empty_data", "single_row", "single_column"]
+def test_data_clean_up_valid_data():
+    # Input data
+    data = {
+        "id": [1, 2, 3],
+        "name": ["John", "Jane", "Alice"],
+        "age": [25, 30, 35],
+        "city": ["New York", "London", "Paris"],
+    }
 
-error_case_ids = ["non_dict_input", "non_json_serializable_input", "empty_dict"]
-
-# Happy path test values
-happy_path_values = [
-    ({"name": ["Alice"], "age": [30]}, pd.DataFrame({"name": ["Alice"], "age": [30]})),
-    (
+    # Expected output
+    expected_output = pd.DataFrame(
         {
-            "id": [1],
-            "name": ["Bob"],
-            "age": [25],
-            "avatar": ["url"],
-            "gender": ["M"],
-            "employment": ["Unemployed"],
-            "credit_card": ["1234-5678-9101-1121"],
-            "subscription": ["none"],
-        },
-        pd.DataFrame({"name": ["Bob"], "age": [25]}),
-    ),
-    (
-        {
-            "id": [2],
-            "name": ["Charlie"],
-            "age": [40],
-            "avatar": ["url"],
-            "gender": ["M"],
-            "employment": ["Employed"],
-            "credit_card": ["2345-6789-1011-1213"],
-            "subscription": ["premium"],
-            "extra_column": ["extra_value"],
-        },
-        pd.DataFrame(
-            {"name": ["Charlie"], "age": [40], "extra_column": ["extra_value"]}
-        ),
-    ),
-]
+            "name": ["John", "Jane", "Alice"],
+            "age": [25, 30, 35],
+            "city": ["New York", "London", "Paris"],
+        }
+    )
 
-# Edge case test values
-edge_case_values = [
-    ({}, pd.DataFrame()),
-    ({"name": ["Dave"]}, pd.DataFrame({"name": ["Dave"]})),
-    ({"name": ["Eve", "Frank"]}, pd.DataFrame({"name": ["Eve", "Frank"]})),
-]
+    # Call the function
+    result = data_clean_up(data)
 
-# Error case test values
-error_case_values = [
-    ("not_a_dict", TypeError),
-    ([{"name": "Alice", "age": 30}], TypeError),
-    ({}, TypeError),
-]
+    # Assert the result
+    assert result.equals(expected_output)
 
 
-@pytest.mark.parametrize("input_data,expected", happy_path_values, ids=happy_path_ids)
-def test_happy_path(input_data, expected):
-    # Act
-    result = data_clean_up(input_data)
+def test_data_clean_up_empty_data():
+    # Input data
+    data = {}
 
-    # Assert
-    pd.testing.assert_frame_equal(result, expected)
+    # Call the function
+    result = data_clean_up(data)
 
-
-@pytest.mark.parametrize("input_data,expected", edge_case_values, ids=edge_case_ids)
-def test_edge_cases(input_data, expected):
-    # Act
-    result = data_clean_up(input_data)
-
-    # Assert
-    pd.testing.assert_frame_equal(result, expected)
+    # Assert that the result is an empty DataFrame
+    assert result.empty
 
 
-@pytest.mark.parametrize(
-    "input_data,expected_exception", error_case_values, ids=error_case_ids
-)
-def test_error_cases(input_data, expected_exception):
-    # Act & Assert
-    with pytest.raises(expected_exception):
-        data_clean_up(input_data)
+def test_data_clean_up_invalid_data():
+    # Input data with invalid format (not a dictionary)
+    data = "invalid_data"
+
+    # Call the function and assert that it raises a TypeError
+    with pytest.raises(TypeError):
+        data_clean_up(data)

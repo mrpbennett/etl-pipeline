@@ -138,7 +138,8 @@ def check_table_exists(table_name):
                     """,
                     (table_name,),
                 )
-                return curs.fetchone()[0]
+                result = curs.fetchone()
+                return result[0] if result is not None else False
     except psycopg2.Error as e:
         logging.error(red(e))
         return False
