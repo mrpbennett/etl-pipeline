@@ -3,7 +3,6 @@ import logging
 import os
 
 import psycopg2
-import tomli
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -15,9 +14,6 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - line:%(lineno)d - %(message)s",
 )
 
-
-with open("config.toml", "rb") as f:
-    c = tomli.load(f)
 
 app = FastAPI()
 
@@ -32,10 +28,9 @@ app.add_middleware(
 
 # Path to the directory where src/api.py is located
 current_dir = os.path.dirname(__file__)
-# Path to the project root (one level up from current_dir)
-project_root = os.path.abspath(os.path.join(current_dir, ".."))
+
 # Path to the static directory
-static_dir = os.path.join(project_root, "static/dist")
+static_dir = os.path.join("", "static/dist")
 
 
 # Mount the Frontend
@@ -59,7 +54,9 @@ async def list_users():
         psycopg2.Error: If an error occurs while querying the database.
     """
     try:
-        with psycopg2.connect(**c["db"]) as conn:
+        with psycopg2.connect(
+            dbname="postgres", user="postgres", password="password", host="localhost"
+        ) as conn:
             with conn.cursor() as curs:
                 curs.execute(
                     """
@@ -92,7 +89,9 @@ async def get_user(user_id: str):
     if len(redis) != 0:
         return redis
     try:
-        with psycopg2.connect(**c["db"]) as conn:
+        with psycopg2.connect(
+            dbname="postgres", user="postgres", password="password", host="localhost"
+        ) as conn:
             with conn.cursor() as curs:
                 curs.execute(
                     """

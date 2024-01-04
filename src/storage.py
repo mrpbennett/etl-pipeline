@@ -37,22 +37,16 @@ Typical usage example:
                         green(f"Address for User: {address['uid']} added successfully")
 """
 import logging
-import os
 from datetime import datetime
 from typing import Literal
 
 import psycopg2
-import tomli
 from simple_chalk import red
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - line:%(lineno)d - %(message)s",
 )
-
-
-with open("config.toml", "rb") as f:
-    c = tomli.load(f)
 
 
 def create_user_table() -> Literal[True]:
@@ -63,7 +57,9 @@ def create_user_table() -> Literal[True]:
         Literal True
     """
     try:
-        with psycopg2.connect(**c["db"]) as conn:
+        with psycopg2.connect(
+            dbname="postgres", user="postgres", password="password", host="localhost"
+        ) as conn:
             with conn.cursor() as curs:
                 curs.execute(
                     """
@@ -97,7 +93,9 @@ def create_address_table() -> Literal[True]:
         Literal True
     """
     try:
-        with psycopg2.connect(**c["db"]) as conn:
+        with psycopg2.connect(
+            dbname="postgres", user="postgres", password="password", host="localhost"
+        ) as conn:
             with conn.cursor() as curs:
                 curs.execute(
                     """
@@ -127,7 +125,9 @@ def create_address_table() -> Literal[True]:
 def check_table_exists(table_name):
     """Check if table exists"""
     try:
-        with psycopg2.connect(**c["db"]) as conn:
+        with psycopg2.connect(
+            dbname="postgres", user="postgres", password="password", host="localhost"
+        ) as conn:
             with conn.cursor() as curs:
                 curs.execute(
                     """
@@ -153,7 +153,9 @@ def insert_into_user_table(user_data: dict) -> Literal[True]:
     """
 
     try:
-        with psycopg2.connect(**c["db"]) as conn:
+        with psycopg2.connect(
+            dbname="postgres", user="postgres", password="password", host="localhost"
+        ) as conn:
             with conn.cursor() as curs:
                 curs.execute(
                     """
@@ -192,7 +194,9 @@ def insert_into_address_table(address_data: dict) -> Literal[True]:
         Liternal True
     """
     try:
-        with psycopg2.connect(**c["db"]) as conn:
+        with psycopg2.connect(
+            dbname="postgres", user="postgres", password="password", host="localhost"
+        ) as conn:
             with conn.cursor() as curs:
                 curs.execute(
                     """
