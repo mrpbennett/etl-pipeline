@@ -28,32 +28,24 @@ Create a data pipeline that ingests user data via an API, processes and stores i
 
 ### Steps
 
+![flow]("assets/flow.png")
+
 1. **Data Ingestion**:
    - Python script to fetch data random user data from an API.
-     - `get_data.py`
    - Pandas for data cleaning and transformation.
-     - `clean_up.py`
 2. **Caching Layer**:
    - Redis setup for caching recent User data and set a TTL.
-     - `caching.py`
    - Python logic for data retrieval from Redis and Postgres.
-     - `api.py`
 3. **Data Storage**:
    - Design and implement a Postgres database schema for the user data.
    - Store processed data into Postgres.
-     - `storage.py`
 4. **Data Retrieval**:
    - API endpoint (e.g., using FastAPI) for data retrieval.
-     - `api.py`
 5. **Dockerization**:
    - Dockerfile for the Python application.
-     - `Dockerfile.main`
-     - `Dockerfile.api`
    - Docker Compose for orchestrating Redis and Postgres services.
-     - `docker-compose.yml`
 6. **Testing and Deployment**:
    - Unit tests for pipeline components.
-     - `./tests`
 
 ### Learning Outcomes
 
