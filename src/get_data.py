@@ -29,7 +29,7 @@ def get_user_data() -> dict:
 
     Raises:
         HTTPError: if an HTTP error occurred
-        Timeout: Incase a Timeout has occurred
+        Timeout: Encase a Timeout has occurred
     """
     try:
         # MAX requests is 100

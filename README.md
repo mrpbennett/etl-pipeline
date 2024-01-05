@@ -28,11 +28,13 @@ Create a data pipeline that ingests user data via an API, processes and stores i
 
 ### Steps
 
+![flow]("assets/flow.png")
+
 1. **Data Ingestion**:
    - Python script to fetch data random user data from an API.
      - [`get_data.py`](https://github.com/mrpbennett/etl-pipeline/blob/6e7ced7368760dcddf94290e8f62658544e26f03/src/get_data.py)
    - Validate the data before processing.
-      - [`validate.py`](https://github.com/mrpbennett/etl-pipeline/blob/6e7ced7368760dcddf94290e8f62658544e26f03/src/validate.py)
+     - [`validate.py`](https://github.com/mrpbennett/etl-pipeline/blob/6e7ced7368760dcddf94290e8f62658544e26f03/src/validate.py)
    - Pandas for data cleaning and transformation.
      - [`clean_up.py`](https://github.com/mrpbennett/etl-pipeline/blob/6e7ced7368760dcddf94290e8f62658544e26f03/src/clean_up.py)
 2. **Caching Layer**:
@@ -43,7 +45,7 @@ Create a data pipeline that ingests user data via an API, processes and stores i
 3. **Data Storage**:
    - Design and implement a Postgres database schema for the user data.
    - Make sure PII is hashed before putting into storage
-      - [`salt.py`](https://github.com/mrpbennett/etl-pipeline/blob/6e7ced7368760dcddf94290e8f62658544e26f03/src/salt.py)
+     - [`salt.py`](https://github.com/mrpbennett/etl-pipeline/blob/6e7ced7368760dcddf94290e8f62658544e26f03/src/salt.py)
    - Store processed data into Postgres.
      - [`storage.py`](https://github.com/mrpbennett/etl-pipeline/blob/6e7ced7368760dcddf94290e8f62658544e26f03/src/storage.py)
 4. **Data Retrieval**:

@@ -67,7 +67,7 @@ def main():
         # Get Data from API. Max requests = 100
         data_to_be_process = get_user_data()
 
-        # Validate Data - validate_json: retuns True
+        # Validate Data - validate_json: returns True
         if validate_json(data_to_be_process):
             """
             Clean Data by removing certain cols using Pandas DataFrame returns pd.DataFrame
