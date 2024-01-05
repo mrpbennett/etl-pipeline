@@ -28,7 +28,7 @@ Create a data pipeline that ingests user data via an API, processes and stores i
 
 ### Steps
 
-![flow]("assets/flow.png")
+![assets/flow.png](https://github.com/mrpbennett/etl-pipeline/blob/main/assets/flow.png?raw=true)
 
 1. **Data Ingestion**:
    - Python script to fetch data random user data from an API.
