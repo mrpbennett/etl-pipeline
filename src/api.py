@@ -26,14 +26,8 @@ app.add_middleware(
 )
 
 
-# Path to the directory where src/api.py is located
-current_dir = os.path.dirname(__file__)
-
-# Path to the static directory
-static_dir = os.path.join("", "static/dist")
-
 # Mount the Frontend
-app.mount("/static", StaticFiles(directory=static_dir), name="static")
+app.mount("/static", StaticFiles(directory="/app/static"), name="static")
 
 
 @app.get("/")
