@@ -8,14 +8,14 @@ tables
 Typical usage example:
 
         user_data = {}
-        users_addresss_data = {}
+        users_address_data = {}
 
     if check_table_exists("users") and check_table_exists("users_address"):
             for user in user_data:
                 if insert_into_user_table(user):
                     logging.info(green(f"User: {user['uid']} added successfully"))
 
-            for address in users_addresss_data:
+            for address in users_address_data:
                 if insert_into_address_table(address):
                     logging.info(
                         green(f"Address for User: {address['uid']} added successfully")
@@ -31,7 +31,7 @@ Typical usage example:
                 if insert_into_user_table(user):
                     logging.info(green(f"User: {user['uid']} added successfully"))
 
-            for address in users_addresss_data:
+            for address in users_address_data:
                 if insert_into_address_table(address):
                     logging.info(
                         green(f"Address for User: {address['uid']} added successfully")

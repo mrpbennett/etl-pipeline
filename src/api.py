@@ -1,13 +1,12 @@
 """ Data Retrieval and Serialization """
 import logging
-import os
 
 import psycopg2
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from src.caching import get_user_from_redis
+from src.storage import get_user_from_redis
 
 logging.basicConfig(
     level=logging.INFO,
@@ -27,7 +26,7 @@ app.add_middleware(
 
 
 # Mount the Frontend
-app.mount("/static", StaticFiles(directory="/app/static"), name="static")
+app.mount("/static", StaticFiles(directory="/app/static/dist/"), name="static")
 
 
 @app.get("/")
@@ -35,7 +34,7 @@ async def root():
     return {"message": "I am Root"}
 
 
-@app.get("/api/datapipe/list-users")
+@app.get("/api/v2/datapipeline/list-users")
 async def list_users():
     """
     Retrieve a list of users from the database.
@@ -61,7 +60,7 @@ async def list_users():
         return {"message": str(e)}
 
 
-@app.get("/api/datapipe/{user_id}")
+@app.get("/api/v2/datapipeline/{user_id}")
 async def get_user(user_id: str):
     """
     Retrieve user information from the database.
