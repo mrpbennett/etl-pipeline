@@ -1,6 +1,6 @@
-""" Salting of PII infomation
+""" Salting of PII information
 
-This function accepts a string to be passed so it can be hashed ready for stroage
+This function accepts a string to be passed so it can be hashed ready for storage
 in database tables
 
 Typical usage example:

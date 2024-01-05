@@ -7,7 +7,7 @@ function App() {
   const [user, setUser] = useState([])
 
   const getUser = async userID => {
-    await fetch(`http://127.0.0.1:80/api/datapipe/${userID}`)
+    await fetch(`http://127.0.0.1:80/api/v2/datapipeline/${userID}`)
       .then(response => response.json())
       .then(data => setUser(data))
       .catch(error => console.error(error))
@@ -15,7 +15,7 @@ function App() {
 
   useEffect(() => {
     // generate a list of users on mount
-    fetch(`http://127.0.0.1:80/api/datapipe/list-users`)
+    fetch(`http://127.0.0.1:80/api/v2/datapipeline/list-users`)
       .then(response => response.json())
       .then(data => {
         setUsers(data)
@@ -62,7 +62,7 @@ function App() {
   }
 
   return (
-    <div className="container mx-auto max-w-[960px] overflow-auto">
+    <div className="container mx-auto max-w-[960px]">
       <div>
         <p className="mt-8 text-lg">
           Click on the <code>uid</code> to display the relevant data for that
@@ -88,9 +88,11 @@ function App() {
                 </ul>
               ))}
         </div>
-        <div className="sticky top-0">
-          <h1 className="font-bold mb-4">User data</h1>
-          <div>{renderUserData()}</div>
+        <div>
+          <div className="sticky top-10">
+            <h1 className="font-bold mb-4">User data</h1>
+            <div>{renderUserData()}</div>
+          </div>
         </div>
       </div>
     </div>
