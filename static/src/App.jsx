@@ -1,3 +1,11 @@
+/**
+ * The App component is responsible for rendering a user interface that displays a list of users and their data.
+ * It fetches user data from an API and allows the user to click on a user ID to display the relevant data for that user.
+ * The user data can be found either in a PostgreSQL database or in a Redis cache, and the component handles rendering
+ * the data accordingly. The component also includes a list of current user IDs and allows the user to select a user to
+ * view their data. The component uses React hooks such as useState and useEffect to manage state and perform API calls.
+ */
+
 import {useEffect, useState} from 'react'
 import Postgres from './assets/postgresql.svg'
 import Redis from './assets/redis.svg'
@@ -7,6 +15,12 @@ function App() {
   const [user, setUser] = useState([])
 
   const getUser = async userID => {
+    /**
+     * Fetches user data from the API based on the provided userID.
+     *
+     * @param {string} userID - The ID of the user to fetch data for.
+     * @returns {Promise<void>} - A Promise that resolves when the user data is fetched and set.
+     */
     await fetch(`http://127.0.0.1:80/api/v2/datapipeline/${userID}`)
       .then(response => response.json())
       .then(data => setUser(data))

@@ -1,29 +1,63 @@
-""" ETL Pipeline
+"""
+This module represents an ETL (Extract, Transform, Load) pipeline for processing daily data dumps.
+The pipeline retrieves data from an API, validates and cleans the data, extracts relevant information,
+and inserts the data into relevant tables in Postgres and Redis for caching.
 
-A project to learn how to build a successful ETL pipeline.
+The main function runs in a loop, processing data dumps every 2 minutes. Each loop represents one daily data dump.
+The maximum number of data dumps to process is defined by the 'max_count' variable.
 
-Here data is pulled from an API this API holds random user data, the data contains 100
-random users in a JSON format. 
+The pipeline consists of the following steps:
+1. Extraction:
+    - The 'get_user_data' function makes an API call to a random user generator API and retrieves data on 10 random users.
+    - If the API call is successful, the data is returned as a JSON object.
 
-The data is then validated, raises a ValueError if not. It is then cleaned via Pandas
-removing unwanted columns. Using pandas is easier to drop cols from big datasets, the 
-same DataFrame is then converted back into a JSON string.
+2. Transformation:
+    - The 'data_clean_up' function takes the JSON object and cleans it by dropping unneeded columns using Pandas DataFrame.
+    - The cleaned data is then converted back to a JSON string for storage.
+    - The 'extract_user_data_for_storage' function extracts relevant user data from the cleaned JSON object and returns a list of user dictionaries.
+    - The 'extract_address_data_for_storage' function extracts relevant address data from the cleaned JSON object and returns a list of address dictionaries.
 
-The data is then extracted from the JSON string and any PII is hashed using a salt method.
-Once data is extracted and hashed it's then stored inside two Postgres tables.
+3. Load:
+    - The extracted user data and address data are stored in Redis for caching using the 'add_user_to_redis' function.
+    - If the 'users' and 'users_address' tables do not exist in Postgres, they are created using the 'create_user_table' and 'create_address_table' functions.
+    - The user data is inserted into the 'users' table using the 'insert_into_user_table' function.
+    - The address data is inserted into the 'users_address' table using the 'insert_into_address_table' function.
 
-The same data is also passed to Redis for caching for quicker retrieval.
+The main function runs the ETL pipeline in a loop, processing data dumps every 2 minutes.
+After each data dump is processed, the program sleeps for 2 minutes before processing the next data dump.
 
-Order of module calls
+Note: This module requires the 'requests', 'pandas', 'simple_chalk', 'salt', and 'storage' modules to be imported.
 
-1. get_data.py
-2. validate.py
-3. clean_up.py
-4. extraction.py & salt.py
-5. storage.py & caching.py
-
+Author: Paul Bennett
+Date: 2024-01-05
 """
 
+import json
+import logging
+import time
+
+import pandas as pd
+import requests
+from requests.exceptions import HTTPError, Timeout
+from simple_chalk import blue, green, red, yellow
+
+from salt import hash_pii
+from storage import (
+    add_user_to_redis,
+    check_table_exists,
+    create_address_table,
+    create_user_table,
+    insert_into_address_table,
+    insert_into_user_table,
+)
+from validate import validate_json
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - line:%(lineno)d - %(filename)s:%(funcName)s -> %(message)s",
+)
+
+# Rest of the code...
 import json
 import logging
 import time
@@ -189,7 +223,7 @@ def extract_address_data_for_storage(data: dict) -> list:
     return address_data
 
 
-def main():
+def main() -> None:
     """
     Main function for processing daily data dumps.
 

@@ -1,41 +1,34 @@
-""" Storing data inside Postgres
-
-Here we storage our user and user address data inside Postgres. There are two tables
-one that stores user data with the users uid and another address table that stores the 
-users address with the users uid. Allow the creation of relationships between the two
-tables
-
-Typical usage example:
-
-        user_data = {}
-        users_address_data = {}
-
-    if check_table_exists("users") and check_table_exists("users_address"):
-            for user in user_data:
-                if insert_into_user_table(user):
-                    logging.info(green(f"User: {user['uid']} added successfully"))
-
-            for address in users_address_data:
-                if insert_into_address_table(address):
-                    logging.info(
-                        green(f"Address for User: {address['uid']} added successfully")
-                    )
-        else:
-            # IF tables do not exist create and add data
-            if create_user_table():
-                logging.info(blue("user table created"))
-            if create_address_table():
-                logging.info(blue("users_address table created"))
-
-            for user in user_data:
-                if insert_into_user_table(user):
-                    logging.info(green(f"User: {user['uid']} added successfully"))
-
-            for address in users_address_data:
-                if insert_into_address_table(address):
-                    logging.info(
-                        green(f"Address for User: {address['uid']} added successfully")
 """
+This module provides functions for storing and retrieving user data using Redis and PostgreSQL.
+
+The module includes the following functions:
+- add_user_to_redis: Adds user data to Redis for caching.
+- get_user_from_redis: Retrieves user data from Redis based on the given key.
+- create_user_table: Creates the users table in PostgreSQL.
+- create_address_table: Creates the users_address table in PostgreSQL.
+- check_table_exists: Checks if a table exists in PostgreSQL.
+- insert_into_user_table: Inserts user data into the users table in PostgreSQL.
+- insert_into_address_table: Inserts user address data into the users_address table in PostgreSQL.
+
+The module also includes a basic logging configuration for logging INFO and ERROR messages.
+
+Note: The module assumes that Redis and PostgreSQL are running and accessible.
+"""
+import logging
+from datetime import datetime
+from typing import Literal
+
+import psycopg2
+import redis
+from redis import RedisError
+from simple_chalk import red
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - line:%(lineno)d - %(message)s",
+)
+
+# ... (existing code)
 import logging
 from datetime import datetime
 from typing import Literal
