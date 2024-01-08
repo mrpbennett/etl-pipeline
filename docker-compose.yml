@@ -9,8 +9,6 @@ services:
     restart: always
     ports:
       - '6379:6379'
-    networks:
-      - etlnetwork
 
   postgres:
     image: postgres:latest
@@ -23,8 +21,6 @@ services:
       POSTGRES_DB: 'postgres'
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - etlnetwork
 
   pipeline:
     image: etl-pipeline
@@ -32,8 +28,6 @@ services:
       context: .
       dockerfile: ./Dockerfile
     command: ['python', 'src/main.py']
-    networks:
-      - etlnetwork
 
   api:
     image: etl-api
@@ -43,9 +37,3 @@ services:
     command: ['uvicorn', 'src.api:app', '--host', '0.0.0.0', '--port', '80']
     ports:
       - '80:80'
-    networks:
-      - etlnetwork
-
-networks:
-  etlnetwork:
-    driver: bridge
