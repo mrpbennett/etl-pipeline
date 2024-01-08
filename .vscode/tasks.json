@@ -4,21 +4,38 @@
     {
       "type": "docker-build",
       "label": "docker-build",
-      "platform": "python",
+      "platform": "node",
       "dockerBuild": {
-        "tag": "etlpipeline:latest",
-        "dockerfile": "${workspaceFolder}/Dockerfile",
-        "context": "${workspaceFolder}",
+        "dockerfile": "${workspaceFolder}/static/Dockerfile",
+        "context": "${workspaceFolder}/static",
         "pull": true
+      },
+      "node": {
+        "package": "${workspaceFolder}/static/package.json"
       }
     },
     {
       "type": "docker-run",
       "label": "docker-run: debug",
       "dependsOn": ["docker-build"],
-      "python": {
-        "args": ["src.api:app", "--host", "0.0.0.0", "--port", "8000"],
-        "module": "uvicorn"
+      "dockerRun": {
+        "env": {
+          "DEBUG": "*",
+          "NODE_ENV": "development"
+        }
+      },
+      "node": {
+        "package": "${workspaceFolder}/static/package.json",
+        "enableDebugging": true
+      }
+    },
+    {
+      "type": "docker-run",
+      "label": "docker-run: release",
+      "dependsOn": ["docker-build"],
+      "platform": "node",
+      "node": {
+        "package": "${workspaceFolder}/static/package.json"
       }
     }
   ]

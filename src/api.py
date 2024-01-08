@@ -75,10 +75,6 @@ app.add_middleware(
 )
 
 
-# Mount the Frontend
-app.mount("/static", StaticFiles(directory="/app/static/dist/"), name="static")
-
-
 @app.get("/")
 async def root():
     return {"message": "I am Root"}
