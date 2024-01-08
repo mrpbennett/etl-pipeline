@@ -1,16 +1,18 @@
-""" Data Validation.
-
-Validates each key in the JSON generated from get_data.py before allowing the 
-cleaning of data. 
-
-Typical usage:
-    a single call to validate_json() is only require this function will validate the 
-    JSON objected pulled from get_data.py
-
-    if validate_json():
-        do something...
 """
+This module provides functions for validating various data fields and structures.
 
+The functions in this module can be used to validate UUIDs, email addresses, URLs,
+dates, and other data types. It also includes functions for validating basic fields
+in an entry, address details, coordinates, employment details, subscription details,
+and credit card details.
+
+The main function in this module is `validate_json`, which takes a JSON object as input
+and performs validation on the different fields and structures within the object.
+
+By using the functions in this module, you can ensure that the data you are working with
+meets the required format and is valid, helping to maintain data integrity and consistency
+in your application.
+"""
 import re
 from typing import Literal
 from uuid import UUID

@@ -1,4 +1,54 @@
-""" Data Retrieval and Serialization """
+"""
+This module contains the API endpoints for the ETL pipeline application.
+
+The API endpoints are implemented using the FastAPI framework. The module
+defines the following endpoints:
+
+- `/`: Root endpoint that returns a simple message indicating that it is the root.
+- `/api/v2/datapipeline/list-users`: Endpoint to retrieve a list of users from the database.
+- `/api/v2/datapipeline/{user_id}`: Endpoint to retrieve user information from the database.
+
+The module also includes a middleware to enable Cross-Origin Resource Sharing (CORS)
+and mounts the frontend static files.
+
+The module uses the `psycopg2` library to connect to the PostgreSQL database and
+retrieve user information. It also uses the `src.storage` module to check if the user
+information is available in Redis before querying the database.
+
+Note: The module assumes that the PostgreSQL database is running on the host "postgres"
+with the database name "postgres" and the user "postgres" with the password "password".
+
+"""
+import logging
+
+import psycopg2
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+
+from src.storage import get_user_from_redis
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - line:%(lineno)d - %(message)s",
+)
+
+# Rest of the code...
+import logging
+
+import psycopg2
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+
+from src.storage import get_user_from_redis
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - line:%(lineno)d - %(message)s",
+)
+
+# Rest of the code...
 import logging
 
 import psycopg2

@@ -22,7 +22,7 @@ RUN pip install async-timeout numpy exceptiongroup
 
 # Copy the rest of the application files into the container
 COPY src /app/src
-COPY static /app/static
+COPY static /app/static/dist
 
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
 RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
