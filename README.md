@@ -76,5 +76,5 @@ docker compose up
 Then head over to the URL to access the front end to see where the data is stored
 
 ```text
-http://127.0.0.1:80/static/index.html
+http://120.0.0.1:5173
 ```
