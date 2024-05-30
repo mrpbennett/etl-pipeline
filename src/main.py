@@ -57,32 +57,6 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - line:%(lineno)d - %(filename)s:%(funcName)s -> %(message)s",
 )
 
-# Rest of the code...
-import json
-import logging
-import time
-
-import pandas as pd
-import requests
-from requests.exceptions import HTTPError, Timeout
-from simple_chalk import blue, green, red, yellow
-
-from salt import hash_pii
-from storage import (
-    add_user_to_redis,
-    check_table_exists,
-    create_address_table,
-    create_user_table,
-    insert_into_address_table,
-    insert_into_user_table,
-)
-from validate import validate_json
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - line:%(lineno)d - %(filename)s:%(funcName)s -> %(message)s",
-)
-
 """
 EXTRACTION
 """
