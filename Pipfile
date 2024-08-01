@@ -18,6 +18,7 @@ simple-chalk = "*"
 boto3 = "*"
 pyment = "*"
 pytest = "*"
+numpy = "*"
 
 [dev-packages]
 

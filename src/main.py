@@ -105,7 +105,7 @@ def data_clean_up(data: dict) -> pd.DataFrame:
     Set up to drop unneeded columns from the created DataFrame
 
     Agrs:
-        data: A JSON object
+        :params data: A JSON object
 
     Returns:
         Pandas DataFrame
