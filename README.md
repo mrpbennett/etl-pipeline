@@ -78,3 +78,10 @@ Then head over to the URL to access the front end to see where the data is store
 ```text
 http://120.0.0.1:5173
 ```
+## ⭐ Stargazers
+
+<div align="center">
+
+[![Star History Chart](https://api.star-history.com/svg?repos=mrpbennett/etl-pipeline&type=Date)](https://star-history.com/#mrpbennett/etl-pipeline&Date)
+
+</div>
